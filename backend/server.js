@@ -23,7 +23,7 @@ function isLoggedIn(req, res, next) {
   if (req.user) {
     next();
   } else {
-    res.sendStatus(401);
+    res.status(401).json({ error: "Unauthorized" });
   }
 }
 
@@ -39,39 +39,22 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-// routes
-app.get(
-  "/auth/google",
-  passport.authenticate("google", { scope: ["profile"] })
-);
+// auth route
+app.use("/auth", require("./routes/auth-route"));
 
-app.get(
-  "/auth/google/callback",
-  passport.authenticate("google", { failureRedirect: "/" }),
-  function (req, res) {
-    // Successful authentication, redirect home.
-    res.redirect("/");
-  }
-);
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+// DO MODIFICATION HERE
+///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-app.get("/auth/google/failure", (req, res) => {
-  res.send("Something went wrong");
-});
-
-app.get("/auth/protected", isLoggedIn, (req, res) => {
-  let name = req.user.displayName;
-  res.send(`Hello ${name}!`);
-});
-
-app.use("/auth/logout", (req, res) => {
-  req.session.destroy();
-  res.send("You have logged out");
-});
-
-app.use("/test", require("./routes/test"));
+// protected routes
+app.use("/test", isLoggedIn, require("./routes/test"));
 app.get("/", (req, res) => {
   res.send("Point of Sale");
 });
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // error handler
 app.use(errorHandler);
