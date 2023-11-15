@@ -11,7 +11,12 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Cross Origin Resource Sharing
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:8081",
+    credentials: true,
+  })
+);
 
 // Express middleware for parsing URL-encoded form data
 app.use(express.urlencoded({ extended: false }));

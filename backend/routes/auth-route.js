@@ -15,16 +15,14 @@ router.route("/loggedIn").get(loggedIn);
 router
   .route("/google")
   .get(passport.authenticate("google", { scope: ["profile", "email"] }));
-router
-  .route("/google/callback")
-  .get(
-    passport.authenticate("google", {
-      failureRedirect: "/auth/google/failure",
-    }),
-    function (req, res) {
-      // Successful authentication, redirect home.
-      res.redirect("/test");
-    }
-  );
+router.route("/google/callback").get(
+  passport.authenticate("google", {
+    failureRedirect: "/google/failure",
+  }),
+  function (req, res) {
+    // Successful authentication, redirect home.
+    res.redirect("http://localhost:8081/");
+  }
+);
 
 module.exports = router;
