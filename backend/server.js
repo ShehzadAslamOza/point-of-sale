@@ -52,7 +52,14 @@ app.use("/auth", require("./routes/auth-route"));
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // protected routes
-app.use("/test", isLoggedIn, require("./routes/test"));
+// app.use("/test", isLoggedIn, require("./routes/test"));
+
+app.use("/test", require("./routes/test"));
+app.use("/api/products", require("./routes/products"));
+app.use("/api/receipt", require("./routes/receipt"));
+app.use("/api/category", require("./routes/category"));
+app.use("/api/saleitem", require("./routes/saleitem"));
+
 app.get("/", (req, res) => {
   res.send("Point of Sale");
 });
