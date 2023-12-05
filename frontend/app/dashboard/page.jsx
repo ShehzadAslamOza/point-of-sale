@@ -28,7 +28,7 @@ const Dashboard = () => {
       case 1:
         return <Inventory handleFormStep={handleFormStep} />;
       case 2:
-        return <AddProduct />;
+        return <AddProduct handleFormStep={handleFormStep} />;
       case 3:
         return <SalesHistory />;
       case 4:

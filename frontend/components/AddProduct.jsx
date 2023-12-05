@@ -3,9 +3,10 @@ import { ImSpinner9 } from "react-icons/im";
 
 import axios from "axios";
 
-const AddProduct = () => {
+const AddProduct = ({ handleFormStep }) => {
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState([]);
+  const [suppliers, setSuppliers] = useState([]);
 
   useEffect(() => {
     setLoading(true);
@@ -17,8 +18,16 @@ const AddProduct = () => {
         }
       );
 
-      setCategories(categoriesData.data);
+      const suppliersData = await axios.get(
+        "http://localhost:3002/api/suppliers",
+        {
+          withCredentials: true,
+        }
+      );
 
+      setCategories(categoriesData.data);
+      setSuppliers(suppliersData.data);
+      console.log(suppliersData.data);
       setLoading(false);
     };
 
@@ -106,6 +115,8 @@ const AddProduct = () => {
           stock_quantity: "",
           CategoryID: "",
         });
+
+        handleFormStep(1);
       } else {
         alert("MASLA HO GYA");
       }
@@ -162,15 +173,20 @@ const AddProduct = () => {
             </label>
             <select
               id="SupplierID"
-              name="SupplierID"
+              name="Supplier"
+              placeholder="Select Supplier"
               value={formData.SupplierID}
-              defaultValue={1}
               onChange={handleInputChange}
               className="border rounded w-full py-2 px-3"
             >
               {/* Add your supplier options here */}
-              <option value={1}>Supplier 1</option>
-              <option value={2}>Supplier 2</option>
+              {suppliers.map((supplier) => {
+                return (
+                  <option key={supplier[0]} value={supplier[0]}>
+                    {supplier[1]}
+                  </option>
+                );
+              })}
             </select>
             {errors.SupplierID && (
               <p className="text-red-500">{errors.SupplierID}</p>
