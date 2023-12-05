@@ -62,6 +62,8 @@ const Inventory = ({ handleFormStep }) => {
                 <th>Cost Price</th>
                 <th>Selling Price</th>
                 <th>Stock Quantity</th>
+                <th></th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -81,6 +83,12 @@ const Inventory = ({ handleFormStep }) => {
                     <td>{product[4]}</td>
                     <td>{product[5]}</td>
                     <td>{product[6]}</td>
+                    <td>
+                      <button className="btn btn-warning">Edit</button>
+                    </td>
+                    <td>
+                      <button className="btn btn-error">Delete</button>
+                    </td>
                   </tr>
                 );
               })}
