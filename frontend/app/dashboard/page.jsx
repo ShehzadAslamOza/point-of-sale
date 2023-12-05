@@ -11,6 +11,7 @@ import Inventory from "@/components/Inventory";
 import SalesHistory from "@/components/SalesHistory";
 import POS from "@/components/POS";
 import AddProduct from "@/components/AddProduct";
+import EditProduct from "@/components/EditProduct";
 
 const Dashboard = () => {
   const { user, loggedIn } = useContext(AuthContext);
@@ -33,6 +34,8 @@ const Dashboard = () => {
         return <SalesHistory />;
       case 4:
         return <POS />;
+      case 5:
+        return <EditProduct />;
     }
   };
 

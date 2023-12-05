@@ -1,4 +1,6 @@
+"use client";
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import axios from "axios";
 import { ImSpinner9 } from "react-icons/im";
 
@@ -6,6 +8,17 @@ const Inventory = ({ handleFormStep }) => {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const router = useRouter();
+
+  const handleEdit = (e) => {
+    // Save product id to local storage
+    localStorage.setItem(
+      "product_id",
+      e.target.parentElement.parentElement.children[1].innerText
+    );
+    handleFormStep(5);
+  };
 
   useEffect(() => {
     setLoading(true);
@@ -84,7 +97,12 @@ const Inventory = ({ handleFormStep }) => {
                     <td>{product[5]}</td>
                     <td>{product[6]}</td>
                     <td>
-                      <button className="btn btn-warning">Edit</button>
+                      <button
+                        onClick={(e) => handleEdit(e)}
+                        className="btn btn-warning"
+                      >
+                        Edit
+                      </button>
                     </td>
                     <td>
                       <button className="btn btn-error">Delete</button>
