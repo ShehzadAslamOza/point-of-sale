@@ -7,6 +7,7 @@ const EditProduct = ({ handleFormStep }) => {
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState([]);
   const [suppliers, setSuppliers] = useState([]);
+  const [product, setProduct] = useState({});
 
   useEffect(() => {
     setLoading(true);
@@ -14,6 +15,13 @@ const EditProduct = ({ handleFormStep }) => {
       // get product id from local storage
       const product_id = localStorage.getItem("product_id");
       console.log(product_id);
+
+      const productData = await axios.get(
+        `http://localhost:3002/api/products/${product_id}`,
+        {
+          withCredentials: true,
+        }
+      );
 
       const categoriesData = await axios.get(
         "http://localhost:3002/api/category",
@@ -29,9 +37,21 @@ const EditProduct = ({ handleFormStep }) => {
         }
       );
 
+      // convert product data array to object
+      const productObject = {
+        ProductID: productData.data[0][0],
+        SupplierID: productData.data[0][1],
+        product_name: productData.data[0][3],
+        cost_price: productData.data[0][4],
+        selling_price: productData.data[0][5],
+        stock_quantity: productData.data[0][6],
+        CategoryID: productData.data[0][2],
+      };
+
+      setProduct(productData.data);
       setCategories(categoriesData.data);
       setSuppliers(suppliersData.data);
-      console.log(suppliersData.data);
+      setFormData(productObject);
       setLoading(false);
     };
 
@@ -40,13 +60,13 @@ const EditProduct = ({ handleFormStep }) => {
 
   // State variables to store form data and validation errors
   const [formData, setFormData] = useState({
-    ProductID: "",
-    SupplierID: "1",
-    product_name: "",
-    cost_price: "",
-    selling_price: "",
-    stock_quantity: "",
-    CategoryID: "1",
+    ProductID: product.ProductID,
+    SupplierID: product.SupplierID,
+    product_name: product.product_name,
+    cost_price: product.cost_price,
+    selling_price: product.selling_price,
+    stock_quantity: product.stock_quantity,
+    CategoryID: product.CategoryID,
   });
 
   const [errors, setErrors] = useState({
@@ -93,42 +113,37 @@ const EditProduct = ({ handleFormStep }) => {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Validate the form
-    if (validateForm()) {
-      // Add your logic to send the data to the server or perform other actions
-      console.log("Form submitted:", formData);
-
-      // Send a POST request
-      const res = await axios.post(
-        "http://localhost:3002/api/products",
-        formData,
-        {
-          withCredentials: true,
-        }
-      );
-
-      if ("msg" in res.data) {
-        alert("Product Added Successfully");
-        setFormData({
-          ProductID: "",
-          SupplierID: "",
-          product_name: "",
-          cost_price: "",
-          selling_price: "",
-          stock_quantity: "",
-          CategoryID: "",
-        });
-
-        handleFormStep(1);
-      } else {
-        alert("MASLA HO GYA");
-      }
-
-      // For demonstration purposes, let's clear the form data after submission
-    } else {
-      console.log("Form has errors. Please fix them before submitting.");
-    }
+    // // Validate the form
+    // if (validateForm()) {
+    //   // Add your logic to send the data to the server or perform other actions
+    //   console.log("Form submitted:", formData);
+    //   // Send a POST request
+    //   const res = await axios.post(
+    //     "http://localhost:3002/api/products",
+    //     formData,
+    //     {
+    //       withCredentials: true,
+    //     }
+    //   );
+    //   if ("msg" in res.data) {
+    //     alert("Product Added Successfully");
+    //     setFormData({
+    //       ProductID: "",
+    //       SupplierID: "",
+    //       product_name: "",
+    //       cost_price: "",
+    //       selling_price: "",
+    //       stock_quantity: "",
+    //       CategoryID: "",
+    //     });
+    //     handleFormStep(1);
+    //   } else {
+    //     alert("MASLA HO GYA");
+    //   }
+    //   // For demonstration purposes, let's clear the form data after submission
+    // } else {
+    //   console.log("Form has errors. Please fix them before submitting.");
+    // }
   };
 
   if (loading) {
@@ -157,6 +172,7 @@ const EditProduct = ({ handleFormStep }) => {
               type="number"
               id="ProductID"
               name="ProductID"
+              disabled={true}
               value={formData.ProductID}
               onChange={handleInputChange}
               className="border rounded w-full py-2 px-3"
@@ -180,6 +196,7 @@ const EditProduct = ({ handleFormStep }) => {
               name="Supplier"
               placeholder="Select Supplier"
               value={formData.SupplierID}
+              disabled={true}
               onChange={handleInputChange}
               className="border rounded w-full py-2 px-3"
             >
