@@ -292,3 +292,8 @@ SELECT ReceiptID FROM Receipts ORDER BY ReceiptID DESC FETCH FIRST 1 ROWS ONLY;
 select * from RECEIPTS where RECEIPTID = 69;
 select * from SaleItems where RECEIPTID = 59;
 select * from CUSTOMERS where MEMBERSHIPID = 1;
+
+-- Update all fields in product table
+UPDATE Products
+SET STOCK_QUANTITY = 99, product_name = 'Pajamas'
+WHERE ProductID = 111;

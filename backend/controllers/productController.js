@@ -89,8 +89,46 @@ const addProducts = asyncHandler(async (req, res) => {
   }
 });
 
+const updateProduct = asyncHandler(async (req, res) => {
+  let connection;
+  try {
+    connection = await getConnection();
+    const query = `UPDATE Products
+    SET SupplierID = :1, CategoryID = :2, product_name = :3, cost_price = :4, selling_price = :5, stock_quantity = :6
+    WHERE ProductID = :7`;
+    const binds = [
+      req.body.SupplierID,
+      req.body.CategoryID,
+      req.body.product_name,
+      req.body.cost_price,
+      req.body.selling_price,
+      req.body.stock_quantity,
+      req.body.ProductID,
+    ];
+    const options = {
+      autoCommit: true, // Commit each insert immediately
+    };
+    // console.log(query , "aaa----------->>>>")
+    await connection.execute(query, binds, options);
+    res.status(202).json({ msg: "Updated" });
+  } catch (error) {
+    console.error("Error executing SQL query:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  } finally {
+    if (connection) {
+      try {
+        // Release the connection when done
+        await connection.close();
+      } catch (error) {
+        console.error("Error closing database connection:", error);
+      }
+    }
+  }
+});
+
 module.exports = {
   getProducts,
   addProducts,
   getProduct,
+  updateProduct,
 };
