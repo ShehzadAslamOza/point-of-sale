@@ -48,7 +48,7 @@ const addProducts = asyncHandler(async (req, res) => {
     res.status(202).json({ msg: "Added" });
   } catch (error) {
     console.error("Error executing SQL query:", error);
-    res.status(500).send("Internal Server Error");
+    res.status(500).json({ error: "Internal Server Error" });
   } finally {
     if (connection) {
       try {
