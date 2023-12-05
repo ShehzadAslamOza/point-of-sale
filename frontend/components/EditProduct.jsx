@@ -37,15 +37,14 @@ const EditProduct = ({ handleFormStep }) => {
         }
       );
 
-      // convert product data array to object
       const productObject = {
-        ProductID: productData.data[0][0],
-        SupplierID: productData.data[0][1],
+        ProductID: productData.data[0][0].toString(),
+        SupplierID: productData.data[0][1].toString(),
         product_name: productData.data[0][3],
-        cost_price: productData.data[0][4],
-        selling_price: productData.data[0][5],
-        stock_quantity: productData.data[0][6],
-        CategoryID: productData.data[0][2],
+        cost_price: productData.data[0][4].toString(),
+        selling_price: productData.data[0][5].toString(),
+        stock_quantity: productData.data[0][6].toString(),
+        CategoryID: productData.data[0][2].toString(),
       };
 
       setProduct(productData.data);
@@ -60,13 +59,13 @@ const EditProduct = ({ handleFormStep }) => {
 
   // State variables to store form data and validation errors
   const [formData, setFormData] = useState({
-    ProductID: product.ProductID,
-    SupplierID: product.SupplierID,
-    product_name: product.product_name,
-    cost_price: product.cost_price,
-    selling_price: product.selling_price,
-    stock_quantity: product.stock_quantity,
-    CategoryID: product.CategoryID,
+    ProductID: "",
+    SupplierID: "",
+    product_name: "",
+    cost_price: "",
+    selling_price: "",
+    stock_quantity: "",
+    CategoryID: "",
   });
 
   const [errors, setErrors] = useState({
@@ -113,37 +112,37 @@ const EditProduct = ({ handleFormStep }) => {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // // Validate the form
-    // if (validateForm()) {
-    //   // Add your logic to send the data to the server or perform other actions
-    //   console.log("Form submitted:", formData);
-    //   // Send a POST request
-    //   const res = await axios.post(
-    //     "http://localhost:3002/api/products",
-    //     formData,
-    //     {
-    //       withCredentials: true,
-    //     }
-    //   );
-    //   if ("msg" in res.data) {
-    //     alert("Product Added Successfully");
-    //     setFormData({
-    //       ProductID: "",
-    //       SupplierID: "",
-    //       product_name: "",
-    //       cost_price: "",
-    //       selling_price: "",
-    //       stock_quantity: "",
-    //       CategoryID: "",
-    //     });
-    //     handleFormStep(1);
-    //   } else {
-    //     alert("MASLA HO GYA");
-    //   }
-    //   // For demonstration purposes, let's clear the form data after submission
-    // } else {
-    //   console.log("Form has errors. Please fix them before submitting.");
-    // }
+    // Validate the form
+    if (validateForm()) {
+      // Add your logic to send the data to the server or perform other actions
+      console.log("Form submitted:", formData);
+      // Send a POST request
+      const res = await axios.put(
+        "http://localhost:3002/api/products",
+        formData,
+        {
+          withCredentials: true,
+        }
+      );
+      if ("msg" in res.data) {
+        alert("Product Updated Successfully");
+        setFormData({
+          ProductID: "",
+          SupplierID: "",
+          product_name: "",
+          cost_price: "",
+          selling_price: "",
+          stock_quantity: "",
+          CategoryID: "",
+        });
+        handleFormStep(1);
+      } else {
+        alert("MASLA HO GYA");
+      }
+      // For demonstration purposes, let's clear the form data after submission
+    } else {
+      console.log("Form has errors. Please fix them before submitting.");
+    }
   };
 
   if (loading) {
