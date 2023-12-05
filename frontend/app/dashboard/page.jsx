@@ -6,12 +6,35 @@ import { AuthContext } from "@/context/AuthContext";
 import { useEffect } from "react";
 import { ImSpinner9 } from "react-icons/im";
 import axios from "axios";
+import Drawer from "@/components/Drawer";
+import Inventory from "@/components/Inventory";
+import SalesHistory from "@/components/SalesHistory";
+import POS from "@/components/POS";
+import AddProduct from "@/components/AddProduct";
 
 const Dashboard = () => {
   const { user, loggedIn } = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
   const [testData, setTestData] = useState(null);
+  const [formStep, setFormStep] = useState(1);
   const router = useRouter();
+
+  const handleFormStep = (step) => {
+    setFormStep(step);
+  };
+
+  const getCurrentStep = () => {
+    switch (formStep) {
+      case 1:
+        return <Inventory handleFormStep={handleFormStep} />;
+      case 2:
+        return <AddProduct />;
+      case 3:
+        return <SalesHistory />;
+      case 4:
+        return <POS />;
+    }
+  };
 
   useEffect(() => {
     setLoading(true);
@@ -28,7 +51,7 @@ const Dashboard = () => {
 
       fetchUser();
     }
-  }, []);
+  }, [formStep]);
 
   if (loading) {
     return (
@@ -39,13 +62,10 @@ const Dashboard = () => {
   } else {
     return (
       <>
-        <h1>
-          <b>Hello {user?.name}</b>
-        </h1>
-
-        {testData.map((data) => {
-          return <p key={data[0]}>{data[0] + " " + data[1] + " " + data[2]}</p>;
-        })}
+        <div className="grid grid-cols-4">
+          <Drawer handleFormStep={handleFormStep} />
+          <div className="col-span-3">{getCurrentStep()}</div>
+        </div>
       </>
     );
   }
