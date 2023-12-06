@@ -295,5 +295,5 @@ select * from CUSTOMERS where MEMBERSHIPID = 1;
 
 -- Update all fields in product table
 UPDATE Products
-SET STOCK_QUANTITY = 99, product_name = 'Pajamas'
+SET SupplierID = 1, CategoryID = 1, product_name = 'Trousers', cost_price = 100, selling_price = 200, stock_quantity = 100
 WHERE ProductID = 111;
