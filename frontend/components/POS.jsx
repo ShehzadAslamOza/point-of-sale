@@ -67,7 +67,7 @@ const POS = () => {
     return (
       <div>
         <h2 className="text-2xl font-semibold mb-4">POS</h2>
-        <div className="grid grid-cols-2">
+        <div className="grid grid-cols-2 gap-2">
           <div>
             <ProductSearch
               products={products}

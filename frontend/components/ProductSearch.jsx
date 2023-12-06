@@ -19,7 +19,7 @@ const ProductSearch = ({ products, categories, addToCart }) => {
 
     // only show 10 products
 
-    setFilteredProducts(filtered.slice(0, 8));
+    setFilteredProducts(filtered);
   };
 
   // const handleEdit = (e) => {
@@ -58,7 +58,7 @@ const ProductSearch = ({ products, categories, addToCart }) => {
       // console.log(categoriesData.data);
       // setCategories(categoriesData.data);
       // setProducts(productsData.data);
-      setFilteredProducts(products.slice(0, 8));
+      setFilteredProducts(products);
       setLoading(false);
     };
 
@@ -83,50 +83,52 @@ const ProductSearch = ({ products, categories, addToCart }) => {
               placeholder="Search"
             />
           </div>
-          <table className="table table-sm mt-4">
-            <thead>
-              <tr>
-                <th></th>
-                <th>
-                  {/* <button onClick={(e) => handleSort(e)}>Product ID</button> */}
-                  Product ID
-                </th>
-                <th>Product Name</th>
-                <th>Category</th>
-                <th>Price</th>
-                <th>Stock</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredProducts.map((product) => {
-                return (
-                  <tr key={product[0]}>
-                    <th></th>
-                    <td>{product[0]}</td>
-                    <td>{product[3]}</td>
-                    <td>
-                      {
-                        categories.filter(
-                          (category) => category[0] === product[2]
-                        )[0][1]
-                      }
-                    </td>
-                    <td>{product[5]}</td>
-                    <td>{product[6]}</td>
-                    <td>
-                      <button
-                        onClick={(e) => addToCart(e)}
-                        className=" btn btn-success text-white font-bold"
-                      >
-                        +
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+          <div className="overflow-y-auto max-h-[70vh]">
+            <table className="table table-sm mt-4">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>
+                    {/* <button onClick={(e) => handleSort(e)}>Product ID</button> */}
+                    Product ID
+                  </th>
+                  <th>Product Name</th>
+                  <th>Category</th>
+                  <th>Price</th>
+                  <th>Stock</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredProducts.map((product) => {
+                  return (
+                    <tr key={product[0]}>
+                      <th></th>
+                      <td>{product[0]}</td>
+                      <td>{product[3]}</td>
+                      <td>
+                        {
+                          categories.filter(
+                            (category) => category[0] === product[2]
+                          )[0][1]
+                        }
+                      </td>
+                      <td>{product[5]}</td>
+                      <td>{product[6]}</td>
+                      <td>
+                        <button
+                          onClick={(e) => addToCart(e)}
+                          className=" btn btn-success text-white font-bold"
+                        >
+                          +
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     );
