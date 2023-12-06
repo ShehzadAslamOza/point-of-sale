@@ -12,7 +12,7 @@ const googleFailure = async (req, res) => {
 
 const loggedIn = async (req, res) => {
   if (req.user) {
-    res.json({ user: req.user._json });
+    res.json({ user: req.user._json, EmployeeID: req.user.EmployeeID });
   } else {
     res.json({ error: "Not logged in" });
   }

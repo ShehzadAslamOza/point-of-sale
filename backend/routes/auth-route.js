@@ -17,7 +17,7 @@ router
   .get(passport.authenticate("google", { scope: ["profile", "email"] }));
 router.route("/google/callback").get(
   passport.authenticate("google", {
-    failureRedirect: "/google/failure",
+    failureRedirect: "",
   }),
   function (req, res) {
     // Successful authentication, redirect home.
