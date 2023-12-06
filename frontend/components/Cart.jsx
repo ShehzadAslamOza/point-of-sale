@@ -2,9 +2,30 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
 
-const Cart = ({ cart, products, setCart }) => {
+const Cart = ({ cart, products, setCart, customers }) => {
   const [filteredCart, setFilteredCart] = useState([]);
   const [prevCart, setPrevCart] = useState([]);
+  const [redeemPoints, setRedeemPoints] = useState(false);
+  const [membershipID, setMembershipID] = useState(customers[0][0]);
+
+  const handleMemberShipID = (e) => {
+    setMembershipID(e.target.value);
+    console.log(e.target.value);
+  };
+
+  const Total = () => {
+    let total = 0;
+    filteredCart.forEach((product) => {
+      total += parseInt(product[7]) * parseInt(product[5]);
+    });
+
+    if (redeemPoints) {
+      total -= customers.filter((customer) => {
+        return customer[0] === parseInt(membershipID);
+      })[0][6];
+    }
+    return total;
+  };
 
   const handleInputChange = (e) => {
     const { value } = e.target;
@@ -21,6 +42,14 @@ const Cart = ({ cart, products, setCart }) => {
     });
 
     setFilteredCart([...tempCart]);
+  };
+
+  const redeemDisabled = () => {
+    if (!redeemPoints) {
+      return "border rounded w-1/4 py-2 px-3 bg-slate-300";
+    } else {
+      return "border rounded w-1/4 py-2 px-3";
+    }
   };
 
   useEffect(() => {
@@ -58,7 +87,7 @@ const Cart = ({ cart, products, setCart }) => {
 
   return (
     <div>
-      <div className="overflow-y-auto max-h-[40vh] m-4 p-1 border-2">
+      <div className="overflow-y-auto min-h-[40vh] max-h-[40vh] m-4 p-1 border-2">
         <table className=" table table-sm">
           <thead>
             <tr>
@@ -115,6 +144,57 @@ const Cart = ({ cart, products, setCart }) => {
             })}
           </tbody>
         </table>
+      </div>
+      {/* Add a selecter to select customer id */}
+      <div className="flex justify-end align-bottom items-center gap-4 m-4">
+        <label className="text-md font-semibold ">Membership ID</label>
+        <select
+          id="CustomerID"
+          name="CustomerID"
+          placeholder="Customer ID"
+          className="border rounded w-1/4 py-2 px-3"
+          onChange={(e) => handleMemberShipID(e)}
+        >
+          {customers.map((customer) => {
+            return (
+              <option key={customer[0]} value={customer[0]}>
+                {customer[0]}
+              </option>
+            );
+          })}
+        </select>
+      </div>
+      <div className="flex justify-end align-bottom items-center gap-4 m-4">
+        <h2 className="text-md font-semibold ">Sub total</h2>
+        <h2 className="border rounded w-1/4 py-2 px-3">
+          {filteredCart.reduce((acc, product) => {
+            return acc + parseInt(product[7]) * parseInt(product[5]);
+          }, 0)}
+        </h2>
+      </div>
+      <div className="flex justify-end align-bottom items-center gap-4 m-4">
+        {/* Add a checkbox */}
+
+        <input
+          type="checkbox"
+          className="form-checkbox h-5 w-5 text-gray-600"
+          id="redeemPoints"
+          name="redeemPoints"
+          value={redeemPoints}
+          onChange={(e) => setRedeemPoints(e.target.checked)}
+        />
+        <label className="text-md font-semibold ">Redeem Points </label>
+        <h2 className={redeemDisabled()}>
+          {
+            customers.filter((customer) => {
+              return customer[0] === parseInt(membershipID);
+            })[0][6]
+          }
+        </h2>
+      </div>
+      <div className="flex justify-end align-bottom items-center gap-4 m-4">
+        <h2 className="text-md font-semibold ">Total</h2>
+        <h2 className="border rounded w-1/4 py-2 px-3">{Total()}</h2>
       </div>
     </div>
   );

@@ -12,6 +12,7 @@ const POS = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [cart, setCart] = useState([]);
+  const [customers, setCustomers] = useState([]);
 
   const addToCart = (e) => {
     // extract product id from e.target
@@ -40,7 +41,14 @@ const POS = () => {
         }
       );
 
-      console.log(categoriesData.data);
+      const customersData = await axios.get(
+        "http://localhost:3002/api/customers",
+        {
+          withCredentials: true,
+        }
+      );
+
+      setCustomers(customersData.data);
       setCategories(categoriesData.data);
       setProducts(productsData.data);
       setFilteredProducts(productsData.data.slice(0, 8));
@@ -68,7 +76,12 @@ const POS = () => {
             />
           </div>
           <div className="border-2 h-[80vh]">
-            <Cart cart={cart} products={products} setCart={setCart} />
+            <Cart
+              cart={cart}
+              products={products}
+              setCart={setCart}
+              customers={customers}
+            />
           </div>
         </div>
       </div>
