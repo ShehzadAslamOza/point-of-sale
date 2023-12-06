@@ -1,14 +1,27 @@
+"use client";
 import React from "react";
 import ProductSearch from "./ProductSearch";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { ImSpinner9 } from "react-icons/im";
+import Cart from "./Cart";
 
 const POS = () => {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [cart, setCart] = useState([]);
+
+  const addToCart = (e) => {
+    // extract product id from e.target
+    const product = e.target.parentElement.parentElement.children[1].innerText;
+
+    let tempCart = cart;
+    tempCart.push(product);
+    tempCart = [...new Set(tempCart)];
+    setCart(tempCart);
+  };
 
   useEffect(() => {
     setLoading(true);
@@ -48,9 +61,15 @@ const POS = () => {
         <h2 className="text-2xl font-semibold mb-4">POS</h2>
         <div className="grid grid-cols-2">
           <div>
-            <ProductSearch products={products} categories={categories} />
+            <ProductSearch
+              products={products}
+              categories={categories}
+              addToCart={addToCart}
+            />
           </div>
-          <div className="border-2 h-[80vh]">See cart</div>
+          <div className="border-2 h-[80vh]">
+            <Cart cart={cart} products={products} setCart={setCart} />
+          </div>
         </div>
       </div>
     );

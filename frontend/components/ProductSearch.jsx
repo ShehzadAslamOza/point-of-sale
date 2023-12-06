@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { ImSpinner9 } from "react-icons/im";
 
-const ProductSearch = ({ products, categories }) => {
+const ProductSearch = ({ products, categories, addToCart }) => {
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -115,7 +115,10 @@ const ProductSearch = ({ products, categories }) => {
                     <td>{product[5]}</td>
                     <td>{product[6]}</td>
                     <td>
-                      <button className=" btn btn-success text-white font-bold">
+                      <button
+                        onClick={(e) => addToCart(e)}
+                        className=" btn btn-success text-white font-bold"
+                      >
                         +
                       </button>
                     </td>
