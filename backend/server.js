@@ -60,6 +60,7 @@ app.use("/api/receipt", require("./routes/receipt"));
 app.use("/api/category", require("./routes/category"));
 app.use("/api/saleitem", require("./routes/saleitem"));
 app.use("/api/suppliers", require("./routes/suppliers"));
+app.use("/api/customers", require("./routes/customers"));
 
 app.get("/", (req, res) => {
   res.send("Point of Sale");
