@@ -33,6 +33,9 @@ const Drawer = ({ handleFormStep }) => {
           <li>
             <button onClick={() => handleFormStep(4)}>POS</button>
           </li>
+          <li>
+            <button onClick={() => handleFormStep(6)}>Customers</button>
+          </li>
         </ul>
       </div>
     </div>

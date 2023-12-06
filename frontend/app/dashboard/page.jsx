@@ -12,6 +12,7 @@ import SalesHistory from "@/components/SalesHistory";
 import POS from "@/components/POS";
 import AddProduct from "@/components/AddProduct";
 import EditProduct from "@/components/EditProduct";
+import Customers from "@/components/Customers";
 
 const Dashboard = () => {
   const { user, loggedIn } = useContext(AuthContext);
@@ -36,6 +37,8 @@ const Dashboard = () => {
         return <POS />;
       case 5:
         return <EditProduct handleFormStep={handleFormStep} />;
+      case 6:
+        return <Customers handleFormStep={handleFormStep} />;
     }
   };
 
