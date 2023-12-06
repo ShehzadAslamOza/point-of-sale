@@ -1,8 +1,48 @@
 "use client";
 import React, { useEffect } from "react";
 import { useState } from "react";
+import axios from "axios";
 
-const Cart = ({ cart, products, setCart, customers }) => {
+{
+  /*
+
+{
+    "receipt": {
+        "EmployeeID": 1,
+        "MembershipID": 1,
+        "date_receipt": "24-MAR-2023",
+        "time_receipt": "12:00",
+        "total_cost":0,
+        "total_sale":0,
+        "points_redeemed":0,
+        "points_received":0,
+        "sales_final": 0
+    },
+    "saleitems": [
+        {
+            "ProductID": 111,
+            "quantity_purchased": 30
+        } ,
+         {
+            "ProductID": 222,
+            "quantity_purchased": 30
+        }, 
+         {
+            "ProductID": 333,
+            "quantity_purchased": 30
+        } ,
+         {
+            "ProductID": 444,
+            "quantity_purchased": 30
+        } 
+
+    ],
+    "redeemTicked": true
+}
+*/
+}
+
+const Cart = ({ handleFormStep, cart, products, setCart, customers }) => {
   const [filteredCart, setFilteredCart] = useState([]);
   const [prevCart, setPrevCart] = useState([]);
   const [redeemPoints, setRedeemPoints] = useState(false);
@@ -11,6 +51,74 @@ const Cart = ({ cart, products, setCart, customers }) => {
   const handleMemberShipID = (e) => {
     setMembershipID(e.target.value);
     console.log(e.target.value);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    // todays date
+    const today = new Date();
+    const month = () => {
+      let m = today.getMonth();
+      if (m == 1) return "JAN";
+      if (m == 2) return "FEB";
+      if (m == 3) return "MAR";
+      if (m == 4) return "APR";
+      if (m == 5) return "MAY";
+      if (m == 6) return "JUN";
+      if (m == 7) return "JUL";
+      if (m == 8) return "AUG";
+      if (m == 9) return "SEP";
+      if (m == 10) return "OCT";
+      if (m == 11) return "NOV";
+      if (m == 12) return "DEC";
+    };
+    const date = `${today.getDate()}-${month()}-${today.getFullYear()}`;
+    const time = `${today.getHours()}:${today.getMinutes()}:${today.getSeconds()}`;
+    const submitData = {
+      receipt: {
+        EmployeeID: 1,
+        MembershipID: membershipID,
+        date_receipt: date,
+        time_receipt: time,
+        total_cost: 0,
+        total_sale: 0,
+        points_redeemed: 0,
+        points_received: 0,
+        sales_final: 0,
+      },
+      saleitems: [],
+      redeemTicked: redeemPoints,
+    };
+
+    filteredCart.forEach((product) => {
+      submitData.saleitems.push({
+        ProductID: product[0],
+        quantity_purchased: product[7],
+      });
+    });
+
+    // if sub total is 0 then dont send request
+    if (submitData.saleitems.length === 0) {
+      alert("Cart is empty");
+    } else {
+      const res = await axios.post(
+        "http://localhost:3002/api/receipt",
+        submitData,
+        {
+          withCredentials: true,
+        }
+      );
+
+      if ("msg" in res.data) {
+        alert("Product Added Successfully");
+
+        handleFormStep(1);
+      } else {
+        alert("MASLA HO GYA");
+      }
+    }
+
+    // Send a POST request
   };
 
   const Total = () => {
@@ -87,7 +195,7 @@ const Cart = ({ cart, products, setCart, customers }) => {
 
   return (
     <div>
-      <div className="overflow-y-auto min-h-[40vh] max-h-[40vh] m-4 p-1 border-2">
+      <div className="overflow-y-auto min-h-[35vh] max-h-[35vh] m-4 p-1 border-2">
         <table className=" table table-sm">
           <thead>
             <tr>
@@ -195,6 +303,14 @@ const Cart = ({ cart, products, setCart, customers }) => {
       <div className="flex justify-end align-bottom items-center gap-4 m-4">
         <h2 className="text-md font-semibold ">Total</h2>
         <h2 className="border rounded w-1/4 py-2 px-3">{Total()}</h2>
+      </div>
+      <div className="flex justify-center align-bottom items-center gap-4 m-4">
+        <button
+          onClick={(e) => handleSubmit(e)}
+          className="btn btn-success w-1/4 py-2 px-3 text-white"
+        >
+          Checkout
+        </button>
       </div>
     </div>
   );

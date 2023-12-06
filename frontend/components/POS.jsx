@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { ImSpinner9 } from "react-icons/im";
 import Cart from "./Cart";
 
-const POS = () => {
+const POS = ({ handleFormStep }) => {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -67,7 +67,7 @@ const POS = () => {
     return (
       <div>
         <h2 className="text-2xl font-semibold mb-4">POS</h2>
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-2">
           <div>
             <ProductSearch
               products={products}
@@ -81,6 +81,7 @@ const POS = () => {
               products={products}
               setCart={setCart}
               customers={customers}
+              handleFormStep={handleFormStep}
             />
           </div>
         </div>

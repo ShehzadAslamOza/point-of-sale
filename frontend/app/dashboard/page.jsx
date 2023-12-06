@@ -34,7 +34,7 @@ const Dashboard = () => {
       case 3:
         return <SalesHistory />;
       case 4:
-        return <POS />;
+        return <POS handleFormStep={handleFormStep} />;
       case 5:
         return <EditProduct handleFormStep={handleFormStep} />;
       case 6:
