@@ -7,6 +7,7 @@ const registeredEmails = [
   "haidercalculus@gmail.com",
   "haidercode@gmail.com",
   "muhammadshehzadaslamoza@gmail.com",
+  "hazimghulamfarooq19@gmail.com"
 ];
 
 passport.use(
