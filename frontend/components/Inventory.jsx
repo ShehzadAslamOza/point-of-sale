@@ -146,7 +146,9 @@ const Inventory = ({ handleFormStep }) => {
           <div className="stats border-2 mt-4 ">
             <div className="stat">
               <div className="stat-title">Total Products</div>
-              <div className="stat-value text-center">{products.length}</div>
+              <div className="stat-value text-center">
+                {filteredProducts.length}
+              </div>
             </div>
           </div>
         </div>
