@@ -110,7 +110,7 @@ const Cart = ({ handleFormStep, cart, products, setCart, customers }) => {
       );
 
       if ("msg" in res.data) {
-        alert("Product Added Successfully");
+        alert("Purchase Successful");
 
         handleFormStep(1);
       } else {
