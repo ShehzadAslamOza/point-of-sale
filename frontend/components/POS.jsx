@@ -18,6 +18,13 @@ const POS = ({ handleFormStep }) => {
     // extract product id from e.target
     const product = e.target.parentElement.parentElement.children[1].innerText;
 
+    // if stock is 0 then don't add to cart
+    const stock = e.target.parentElement.parentElement.children[5].innerText;
+    if (stock === "Out of Stock") {
+      alert("Out of Stock");
+      return;
+    }
+
     let tempCart = cart;
     tempCart.push(product);
     tempCart = [...new Set(tempCart)];

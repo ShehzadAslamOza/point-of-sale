@@ -81,6 +81,23 @@ const Cart = ({ handleFormStep, cart, products, setCart, customers }) => {
       }
     }
 
+    filteredCart.forEach((product) => {
+      // for each product check if it is in products
+      const index = products.findIndex((item) => {
+        return item[0] === product[0];
+      });
+
+      if (products[index][6] - product[7] < 10) {
+        alert(
+          "Stock is low for Product ID: " +
+            product[0] +
+            " (" +
+            product[3] +
+            ") Contact Supply Chain to reorder"
+        );
+      }
+    });
+
     // Send a POST request
   };
 
