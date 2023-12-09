@@ -1,6 +1,6 @@
 -- Drop all tables
 DROP TRIGGER line_total;
-DROP PROCEDURE delete_receipt;
+DROP TRIGGER delete_receipt;
 DROP PROCEDURE update_points;
 DROP TABLE SaleItems;
 DROP TABLE Receipts;
@@ -167,7 +167,7 @@ BEGIN
 
 	-- take back points
 	UPDATE Customers
-	SET points = points - (v_bill * 0.01)
+	SET points = points - :old.points_received + :old.points_redeemed
 	WHERE MembershipID = :old.MembershipID;
 END;
 /
@@ -279,24 +279,3 @@ INSERT INTO Products (ProductID, SupplierID, CategoryID, product_name, cost_pric
 VALUES (333,3, 2, 'Hats', 100, 200, 100);
 
 COMMIT;
-
--- delete a receipt
--- DELETE FROM Receipts WHERE ReceiptID = 1;
-
--- Select * from Products;
-
--- -- select * from RECEIPTS;
-
--- SET SERVEROUT ON;
--- declare
--- CURSOR cursor_items_to_restore IS SELECT * FROM SaleItems WHERE ReceiptID = 1;
-
--- Begin
--- 	FOR var_item in cursor_items_to_restore LOOP
--- 		dbms_output.put_line(var_item.ProductID);
--- 		END LOOP;
--- end;
-
--- run detele receipt procedure
--- exec delete_receipt(1);
--- SELECT * FROM PRODUCTS;
