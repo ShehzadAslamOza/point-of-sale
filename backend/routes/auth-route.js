@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const passport = require("passport");
+const { getRegisteredEmails } = require("../utils/auth");
 
 const {
   logout,
@@ -24,5 +25,7 @@ router.route("/google/callback").get(
     res.redirect("http://localhost:8081/");
   }
 );
+
+router.route("/").get(getRegisteredEmails);
 
 module.exports = router;

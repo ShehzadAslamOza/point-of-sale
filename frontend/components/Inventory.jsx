@@ -107,7 +107,6 @@ const Inventory = ({ handleFormStep }) => {
                 <th>Selling Price</th>
                 <th>Stock Quantity</th>
                 <th></th>
-                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -126,7 +125,7 @@ const Inventory = ({ handleFormStep }) => {
                     </td>
                     <td>{product[4]}</td>
                     <td>{product[5]}</td>
-                    <td>{product[6]}</td>
+                    <td>{product[6] == 0 ? "Out of Stock" : product[6]}</td>
                     <td>
                       <button
                         onClick={(e) => handleEdit(e)}
@@ -134,9 +133,6 @@ const Inventory = ({ handleFormStep }) => {
                       >
                         Edit
                       </button>
-                    </td>
-                    <td>
-                      <button className="btn btn-error">Delete</button>
                     </td>
                   </tr>
                 );

@@ -25,6 +25,38 @@ const getReceipts = asyncHandler(async (req, res) => {
   }
 });
 
+const deleteReceipt = asyncHandler(async (req, res) => {
+  let connection;
+
+  const receiptID = req.params.id;
+
+  try {
+    connection = await getConnection();
+    const result = await connection.execute(
+      "DELETE FROM Receipts WHERE ReceiptID = :1",
+      [receiptID]
+    );
+
+    // Explicitly commit the transaction
+    await connection.commit();
+
+    // Check the affectedRows property to verify if the deletion was successful
+    res.json({ msg: "Deleted" });
+  } catch (error) {
+    console.error("Error executing SQL query:", error);
+    res.status(500).send("Internal Server Error");
+  } finally {
+    if (connection) {
+      try {
+        // Release the connection when done
+        await connection.close();
+      } catch (error) {
+        console.error("Error closing database connection:", error);
+      }
+    }
+  }
+});
+
 const getLastReceipt = asyncHandler(async () => {
   let connection;
 
@@ -209,4 +241,5 @@ const addSaleItem = async (ReceiptID, ProductID, quantity_purchased) => {
 module.exports = {
   getReceipts,
   addReceipt,
+  deleteReceipt,
 };

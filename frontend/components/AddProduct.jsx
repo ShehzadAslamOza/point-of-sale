@@ -173,7 +173,7 @@ const AddProduct = ({ handleFormStep }) => {
             </label>
             <select
               id="SupplierID"
-              name="Supplier"
+              name="SupplierID"
               placeholder="Select Supplier"
               value={formData.SupplierID}
               onChange={handleInputChange}
