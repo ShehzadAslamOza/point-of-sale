@@ -92,7 +92,7 @@ INSERT INTO Employees (employee_first_name, employee_last_name, employee_email, 
 VALUES ('Haider', 'Khan', 'haidercalculus@gmail.com', '03001234567', '04-MAR-2021');
 
 INSERT INTO Employees (employee_first_name, employee_last_name, employee_email, employee_phone_number, employee_joining_date) 
-VALUES ('Hazim', 'IBA', 'haidercode@gmail.com', '03001234567', '04-MAR-2021');
+VALUES ('Hazim', 'IBA', 'hazimghulamfarooq19@gmail.com', '03001234567', '04-MAR-2021');
 
 SELECT * FROM Employees;
 
@@ -199,6 +199,7 @@ BEGIN
 	END IF;
 
 END;
+/
 
 -- Trigger for Reorder
 CREATE OR REPLACE TRIGGER Reorder
@@ -215,6 +216,69 @@ BEGIN
 		WHERE ProductID = :new.ProductID;
 	END IF;
 END;
+/
+
+CREATE OR REPLACE TRIGGER delete_receipt
+BEFORE DELETE ON Receipts
+FOR EACH ROW
+DECLARE
+    v_stock_quantity_original INT;
+    v_bill FLOAT;
+    v_points_redeemed FLOAT;
+    CURSOR cursor_items_to_restore IS SELECT * FROM SaleItems WHERE ReceiptID = :old.ReceiptID;
+BEGIN
+    -- Calculate the total bill amount
+    SELECT SUM(line_total) INTO v_bill FROM SaleItems WHERE RECEIPTID = :old.ReceiptID;
+
+    -- Delete from SaleItems
+    DELETE FROM SaleItems
+    WHERE ReceiptID = :old.ReceiptID;
+
+    -- Restore stock for each item
+    FOR var_item IN cursor_items_to_restore LOOP
+        -- Add back to stock
+        SELECT stock_quantity INTO v_stock_quantity_original FROM Products WHERE ProductID = var_item.ProductID;
+        UPDATE Products
+        SET stock_quantity = v_stock_quantity_original + var_item.quantity_purchased 
+        WHERE ProductID = var_item.ProductID;
+    END LOOP;
+
+    -- Take back points
+    v_points_redeemed := :old.points_redeemed;  -- Assuming points_redeemed is a column in Receipts
+    UPDATE Customers
+    SET points = points - (v_bill * 0.01) + v_points_redeemed
+    WHERE MembershipID = :old.MembershipID;
+END;
+/
+
+-- -- Trigger for deleting receipt
+-- CREATE OR REPLACE TRIGGER delete_receipt
+-- BEFORE DELETE ON Receipts
+-- FOR EACH ROW
+-- DECLARE
+-- 	v_stock_quantity_original INT;
+-- 	v_bill FLOAT;
+-- 	CURSOR cursor_items_to_restore IS SELECT * FROM SaleItems WHERE ReceiptID = :old.ReceiptID;
+-- BEGIN
+-- 	SELECT SUM(line_total) INTO v_bill FROM SaleItems WHERE RECEIPTID = :old.ReceiptID; 
+-- 	-- delete from SaleItems
+-- 	DELETE FROM SaleItems
+-- 	WHERE ReceiptID = :old.ReceiptID;
+
+-- 	FOR var_item in cursor_items_to_restore LOOP
+-- 	-- for each item
+-- 		-- add back to stock
+-- 		SELECT stock_quantity INTO v_stock_quantity_original FROM Products WHERE ProductID = var_item.ProductID;
+-- 		UPDATE Products
+-- 		SET stock_quantity = v_stock_quantity_original + var_item.quantity_purchased 
+-- 		WHERE ProductID = var_item.ProductID;
+-- 	END LOOP;
+
+-- 	-- take back points
+-- 	UPDATE Customers
+-- 	SET points = points - (v_bill * 0.01)
+-- 	WHERE MembershipID = :old.MembershipID;
+-- END;
 
 
 -- Procedures for fetching points
@@ -264,6 +328,7 @@ BEGIN
 
 	Commit;
 END;
+/
 
 
 
@@ -297,3 +362,33 @@ select * from CUSTOMERS where MEMBERSHIPID = 1;
 UPDATE Products
 SET SupplierID = 1, CategoryID = 1, product_name = 'Trousers', cost_price = 100, selling_price = 200, stock_quantity = 100
 WHERE ProductID = 111;
+
+
+-- Hazim Checking Receipts Deletion
+-- Dummy data for Receipts
+INSERT INTO Receipts (EmployeeID, MembershipID, date_receipt, time_receipt, total_cost, total_sale, points_redeemed, points_received, sales_final)
+VALUES (2, 2, '04-MAR-2021', '12:00', 0, 0, 0, 0, 0);
+
+INSERT INTO SaleItems (ReceiptID, ProductID, quantity_purchased)
+VALUES (1, 111, 10);
+
+exec update_points(FALSE, 2, 1);
+
+INSERT INTO Receipts (EmployeeID, MembershipID, date_receipt, time_receipt, total_cost, total_sale, points_redeemed, points_received, sales_final)
+VALUES (2, 2, '04-MAR-2021', '12:00', 0, 0, 0, 0, 0);
+
+INSERT INTO SaleItems (ReceiptID, ProductID, quantity_purchased)
+VALUES (2, 111, 25);
+
+exec update_points(TRUE, 2, 2);
+
+INSERT INTO Receipts (EmployeeID, MembershipID, date_receipt, time_receipt, total_cost, total_sale, points_redeemed, points_received, sales_final)
+VALUES (2, 2, '04-MAR-2021', '12:00', 0, 0, 0, 0, 0);
+
+INSERT INTO SaleItems (ReceiptID, ProductID, quantity_purchased)
+VALUES (3, 111, 10);
+
+exec update_points(TRUE, 2, 3);
+
+DELETE FROM Receipts
+WHERE ReceiptID = 2;
