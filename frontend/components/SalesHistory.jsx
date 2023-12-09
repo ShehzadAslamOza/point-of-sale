@@ -13,6 +13,27 @@ const SalesHistory = () => {
     return totalSale - totalCost;
   };
 
+  const handleRefund = async (e) => {
+    e.preventDefault();
+    const receiptId = e.target.parentNode.parentNode.childNodes[1].innerText;
+    const refundData = await axios.delete(
+      `http://localhost:3002/api/receipt/${receiptId}`,
+      { withCredentials: true }
+    );
+
+    if (refundData.data.msg) {
+      alert("Refund Successful");
+
+      // remove the receipt from the table
+      const newReceipt = receipt.filter((receipt) => {
+        return receipt[0] !== parseInt(receiptId);
+      });
+      setReceipt([...newReceipt]);
+    } else {
+      alert("Refund Failed");
+    }
+  };
+
   useEffect(() => {
     setLoading(true);
     const fetchData = async () => {
@@ -98,6 +119,7 @@ const SalesHistory = () => {
                 <th>Points Redeemed</th>
                 <th>Points Received</th>
                 <th>Final Price</th>
+                <th>Refund</th>
               </tr>
             </thead>
             <tbody>
@@ -115,6 +137,14 @@ const SalesHistory = () => {
                     <td>{receipt[7]}</td>
                     <td>{receipt[8]}</td>
                     <td>{receipt[9]}</td>
+                    <td>
+                      <button
+                        onClick={handleRefund}
+                        className="bg-lime-600 text-white p-2 rounded-md"
+                      >
+                        Refund
+                      </button>
+                    </td>
                   </tr>
                 );
               })}
