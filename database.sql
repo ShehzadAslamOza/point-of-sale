@@ -1,7 +1,6 @@
 -- Drop all tables
 DROP TRIGGER line_total;
-DROP TRIGGER Reorder;
-DROP TRIGGER delete_receipt;
+DROP PROCEDURE delete_receipt;
 DROP PROCEDURE update_points;
 DROP TABLE SaleItems;
 DROP TABLE Receipts;
@@ -142,91 +141,37 @@ BEGIN
 END;
 /
 
--- Trigger for Reorder
--- CREATE OR REPLACE TRIGGER Reorder
--- AFTER INSERT ON SaleItems
--- FOR EACH ROW
--- DECLARE
--- 	v_stock_quantity INT;
--- BEGIN
--- 	SELECT stock_quantity INTO v_stock_quantity FROM Products WHERE ProductID = :new.ProductID;
-
--- 	IF v_stock_quantity <= 10 THEN
--- 		UPDATE Products
--- 		SET stock_quantity = v_stock_quantity + 90
--- 		WHERE ProductID = :new.ProductID;
--- 	END IF;
--- END;
--- /
-
--- -- New Trigger
--- -- Trigger for deleting receipt
--- CREATE OR REPLACE TRIGGER delete_receipt
--- BEFORE DELETE ON Receipts
--- FOR EACH ROW
--- DECLARE
--- 	v_stock_quantity_original INT;
--- 	v_bill FLOAT;
--- 	var_redeemed_points FLOAT;
--- 	CURSOR cursor_items_to_restore IS SELECT * FROM SaleItems WHERE ReceiptID = :old.ReceiptID;
--- BEGIN
--- 	SELECT SUM(line_total) INTO v_bill FROM SaleItems WHERE RECEIPTID = :old.ReceiptID; 
--- 	-- delete from SaleItems
--- 	DELETE FROM SaleItems
--- 	WHERE ReceiptID = :old.ReceiptID;
-
--- 	FOR var_item in cursor_items_to_restore LOOP
--- 	-- for each item
--- 		-- add back to stock
--- 		SELECT stock_quantity INTO v_stock_quantity_original FROM Products WHERE ProductID = var_item.ProductID;
--- 		UPDATE Products
--- 		SET stock_quantity = v_stock_quantity_original + var_item.quantity_purchased 
--- 		WHERE ProductID = var_item.ProductID;
--- 	END LOOP;
-
--- 	-- take back points
--- 	UPDATE Customers
--- 	SET points = points - (v_bill * 0.01)
--- 	WHERE MembershipID = :old.MembershipID;
-
--- END;
--- /
-
-
+-- Trigger for deleting receipt
 CREATE OR REPLACE TRIGGER delete_receipt
 BEFORE DELETE ON Receipts
 FOR EACH ROW
 DECLARE
-    v_stock_quantity_original INT;
-    v_bill FLOAT;
-    v_points_redeemed FLOAT;
-    CURSOR cursor_items_to_restore IS SELECT * FROM SaleItems WHERE ReceiptID = :old.ReceiptID;
+	v_stock_quantity_original INT;
+	v_bill FLOAT;
+	CURSOR cursor_items_to_restore IS SELECT * FROM SaleItems WHERE ReceiptID = :old.ReceiptID;
 BEGIN
-    -- Calculate the total bill amount
-    SELECT SUM(line_total) INTO v_bill FROM SaleItems WHERE RECEIPTID = :old.ReceiptID;
-
-    -- Delete from SaleItems
-    DELETE FROM SaleItems
-    WHERE ReceiptID = :old.ReceiptID;
-
-    -- Restore stock for each item
-    FOR var_item IN cursor_items_to_restore LOOP
-        -- Add back to stock
-        SELECT stock_quantity INTO v_stock_quantity_original FROM Products WHERE ProductID = var_item.ProductID;
-        UPDATE Products
-        SET stock_quantity = v_stock_quantity_original + var_item.quantity_purchased 
-        WHERE ProductID = var_item.ProductID;
-    END LOOP;
-
-    -- Take back points
-    v_points_redeemed := :old.points_redeemed;  -- Assuming points_redeemed is a column in Receipts
-    UPDATE Customers
-    SET points = points - (v_bill * 0.01) + v_points_redeemed
-    WHERE MembershipID = :old.MembershipID;
-
+	SELECT SUM(line_total) INTO v_bill FROM SaleItems WHERE RECEIPTID = :old.ReceiptID; 
+	-- delete from SaleItems
 	
+	FOR var_item in cursor_items_to_restore LOOP
+	-- for each item
+		-- add back to stock
+		SELECT stock_quantity INTO v_stock_quantity_original FROM Products WHERE ProductID = var_item.ProductID;
+		UPDATE Products
+		SET stock_quantity = v_stock_quantity_original + var_item.quantity_purchased 
+		WHERE ProductID = var_item.ProductID;
+	END LOOP;
+
+	DELETE FROM SaleItems
+	WHERE ReceiptID = :old.ReceiptID;
+
+	-- take back points
+	UPDATE Customers
+	SET points = points - (v_bill * 0.01)
+	WHERE MembershipID = :old.MembershipID;
 END;
 /
+
 
 
 
@@ -336,4 +281,22 @@ VALUES (333,3, 2, 'Hats', 100, 200, 100);
 COMMIT;
 
 -- delete a receipt
--- DELETE FROM Receipts WHERE ReceiptID = 6;
+-- DELETE FROM Receipts WHERE ReceiptID = 1;
+
+-- Select * from Products;
+
+-- -- select * from RECEIPTS;
+
+-- SET SERVEROUT ON;
+-- declare
+-- CURSOR cursor_items_to_restore IS SELECT * FROM SaleItems WHERE ReceiptID = 1;
+
+-- Begin
+-- 	FOR var_item in cursor_items_to_restore LOOP
+-- 		dbms_output.put_line(var_item.ProductID);
+-- 		END LOOP;
+-- end;
+
+-- run detele receipt procedure
+-- exec delete_receipt(1);
+-- SELECT * FROM PRODUCTS;
