@@ -1,3 +1,13 @@
+-- Drop all tables
+DROP TABLE SaleItems;
+DROP TABLE Receipts;
+DROP TABLE Products;
+DROP TABLE Categories;
+DROP TABLE Employees;
+DROP TABLE Suppliers;
+DROP TABLE Customers;
+
+
 CREATE TABLE Customers (
 	MembershipID INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	first_name varchar(255) NOT NULL,
@@ -237,6 +247,8 @@ VALUES ('Haider', 'Khan', 'haidercalculus@gmail.com', '03001234567', '04-MAR-202
 INSERT INTO Employees (employee_first_name, employee_last_name, employee_email, employee_phone_number, employee_joining_date) 
 VALUES ('Hazim', 'IBA', 'hazimghulamfarooq19@gmail.com', '03001234567', '04-MAR-2021');
 
+INSERT INTO Employees (employee_first_name, employee_last_name, employee_email, employee_phone_number, employee_joining_date) 
+VALUES ('M', 'Shehzad', 'shehzadaslamoza6@gmail.com', '03001234567', '04-MAR-2021');
 
 -- Insert dummy data in Customer tables
 INSERT INTO Customers (first_name, last_name, email, age, phone_number, points, customer_city, customer_country, customer_street_address, customer_plot_number)
