@@ -10,6 +10,7 @@ const Cart = ({ handleFormStep, cart, products, setCart, customers }) => {
   const [prevCart, setPrevCart] = useState([]);
   const [redeemPoints, setRedeemPoints] = useState(false);
   const [membershipID, setMembershipID] = useState(customers[0][0]);
+  const [forceRedeem, setForceRedeem] = useState(false);
 
   const handleMemberShipID = (e) => {
     setMembershipID(e.target.value);
@@ -143,6 +144,19 @@ const Cart = ({ handleFormStep, cart, products, setCart, customers }) => {
   useEffect(() => {
     console.log("employee", employeeID);
 
+    //force redeem points
+    const temp = customers.filter((customer) => {
+      return customer[0] === parseInt(membershipID);
+    })[0][6];
+
+    if (temp < 0) {
+      setRedeemPoints(true);
+      setForceRedeem(true);
+    } else {
+      setForceRedeem(false);
+      setRedeemPoints(false);
+    }
+
     // if all products in prev and current cart are same then do nothing/ dont check by length
 
     const filtered = products.filter((product) => {
@@ -164,7 +178,7 @@ const Cart = ({ handleFormStep, cart, products, setCart, customers }) => {
       }
     });
     setFilteredCart(filtered);
-  }, [cart]);
+  }, [cart, membershipID]);
 
   const handleRemove = (e) => {
     const product = e.target.parentElement.parentElement.children[1].innerText;
@@ -271,6 +285,8 @@ const Cart = ({ handleFormStep, cart, products, setCart, customers }) => {
           id="redeemPoints"
           name="redeemPoints"
           value={redeemPoints}
+          checked={redeemPoints}
+          disabled={forceRedeem}
           onChange={(e) => setRedeemPoints(e.target.checked)}
         />
         <label className="text-md font-semibold ">Redeem Points </label>
