@@ -7,7 +7,8 @@ import { ImSpinner9 } from "react-icons/im";
 import axios from "axios";
 
 export default function SignIn() {
-  const { user, loggedIn, setUser, setLoggedIn } = useContext(AuthContext);
+  const { user, loggedIn, setUser, setLoggedIn, setEmployeeID } =
+    useContext(AuthContext);
   const [loading, setLoading] = useState(true);
 
   const router = useRouter();
@@ -21,6 +22,7 @@ export default function SignIn() {
       console.log(res);
       if (res.data.user) {
         setUser(res.data.user);
+        setEmployeeID(res.data.EmployeeID);
         setLoggedIn(true);
         router.push("/dashboard");
       }

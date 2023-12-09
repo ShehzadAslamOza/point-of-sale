@@ -1,48 +1,11 @@
 "use client";
-import React, { useEffect } from "react";
 import { useState } from "react";
 import axios from "axios";
-
-{
-  /*
-
-{
-    "receipt": {
-        "EmployeeID": 1,
-        "MembershipID": 1,
-        "date_receipt": "24-MAR-2023",
-        "time_receipt": "12:00",
-        "total_cost":0,
-        "total_sale":0,
-        "points_redeemed":0,
-        "points_received":0,
-        "sales_final": 0
-    },
-    "saleitems": [
-        {
-            "ProductID": 111,
-            "quantity_purchased": 30
-        } ,
-         {
-            "ProductID": 222,
-            "quantity_purchased": 30
-        }, 
-         {
-            "ProductID": 333,
-            "quantity_purchased": 30
-        } ,
-         {
-            "ProductID": 444,
-            "quantity_purchased": 30
-        } 
-
-    ],
-    "redeemTicked": true
-}
-*/
-}
+import { useContext, useEffect } from "react";
+import { AuthContext } from "@/context/AuthContext";
 
 const Cart = ({ handleFormStep, cart, products, setCart, customers }) => {
+  const { employeeID } = useContext(AuthContext);
   const [filteredCart, setFilteredCart] = useState([]);
   const [prevCart, setPrevCart] = useState([]);
   const [redeemPoints, setRedeemPoints] = useState(false);
@@ -76,7 +39,7 @@ const Cart = ({ handleFormStep, cart, products, setCart, customers }) => {
     const time = `${today.getHours()}:${today.getMinutes()}:${today.getSeconds()}`;
     const submitData = {
       receipt: {
-        EmployeeID: 1,
+        EmployeeID: employeeID,
         MembershipID: membershipID,
         date_receipt: date,
         time_receipt: time,
@@ -161,6 +124,8 @@ const Cart = ({ handleFormStep, cart, products, setCart, customers }) => {
   };
 
   useEffect(() => {
+    console.log("employee", employeeID);
+
     // if all products in prev and current cart are same then do nothing/ dont check by length
 
     const filtered = products.filter((product) => {
