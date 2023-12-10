@@ -13,8 +13,7 @@
   },
   "scripts": {
     "dev": "nodemon server.js",
-    "start": "node server.js",
-    "execsql": "sqlplus c##pointofsale2/123@orcl @D:/PointOfSale_DB_Project/point-of-sale/database.sql"
+    "start": "node server.js"
   },
   "name": "backend",
   "version": "1.0.0",
