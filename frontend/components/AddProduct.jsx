@@ -186,7 +186,7 @@ const AddProduct = ({ handleFormStep }) => {
               htmlFor="SupplierID"
               className="block text-gray-700 text-sm font-bold mb-2"
             >
-              Supplier ID
+              Supplier Name
             </label>
             <select
               id="SupplierID"
