@@ -3,12 +3,15 @@
 **Before you begin:**
 
 - Ensure you have the following installed:
+
   - Git
   - Node.js
   - Oracle SQL
   - A text editor (e.g., Sublime Text, Visual Studio Code)
   - SQL Developer
   - A web browser
+
+- **Extract the zip file. It has a backend folder, a frontend folder and a database.sql file**
 
 **Step 1: Database Setup**
 
