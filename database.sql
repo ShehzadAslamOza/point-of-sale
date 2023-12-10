@@ -238,6 +238,9 @@ VALUES ('Hazim', 'IBA', 'hazimghulamfarooq19@gmail.com', '03001234567', '04-MAR-
 INSERT INTO Employees (employee_first_name, employee_last_name, employee_email, employee_phone_number, employee_joining_date) 
 VALUES ('M', 'Shehzad', 'shehzadaslamoza6@gmail.com', '03001234567', '04-MAR-2021');
 
+INSERT INTO Employees (employee_first_name, employee_last_name, employee_email, employee_phone_number, employee_joining_date) 
+VALUES ('M', 'TEST', 'sshpointofsale@gmail.com', '03001234567', '04-MAR-2021');
+
 -- Insert dummy data in Customer tables
 INSERT INTO Customers (first_name, last_name, email, age, phone_number, points, customer_city, customer_country, customer_street_address, customer_plot_number)
 VALUES ('C1', 'C1', 'email', 20, '03001234567', 0, 'Karachi', 'Pakistan', 'Street 1', 'Plot 1');
