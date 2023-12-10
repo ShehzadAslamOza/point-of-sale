@@ -1,14 +1,14 @@
--- Drop all tables
-DROP TRIGGER line_total;
-DROP TRIGGER delete_receipt;
-DROP PROCEDURE update_points;
-DROP TABLE SaleItems;
-DROP TABLE Receipts;
-DROP TABLE Products;
-DROP TABLE Categories;
-DROP TABLE Employees;
-DROP TABLE Suppliers;
-DROP TABLE Customers;
+-- Drop all tables when needed
+-- DROP TRIGGER line_total;
+-- DROP TRIGGER delete_receipt;
+-- DROP PROCEDURE update_points;
+-- DROP TABLE SaleItems;
+-- DROP TABLE Receipts;
+-- DROP TABLE Products;
+-- DROP TABLE Categories;
+-- DROP TABLE Employees;
+-- DROP TABLE Suppliers;
+-- DROP TABLE Customers;
 
 
 CREATE TABLE Customers (
