@@ -7,6 +7,7 @@ const AddProduct = ({ handleFormStep }) => {
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState([]);
   const [suppliers, setSuppliers] = useState([]);
+  const [products, setProducts] = useState([]);
 
   useEffect(() => {
     setLoading(true);
@@ -25,6 +26,14 @@ const AddProduct = ({ handleFormStep }) => {
         }
       );
 
+      const productsData = await axios.get(
+        "http://localhost:3002/api/products",
+        {
+          withCredentials: true,
+        }
+      );
+
+      setProducts(productsData.data);
       setCategories(categoriesData.data);
       setSuppliers(suppliersData.data);
       console.log(suppliersData.data);
@@ -94,6 +103,14 @@ const AddProduct = ({ handleFormStep }) => {
     if (validateForm()) {
       // Add your logic to send the data to the server or perform other actions
       console.log("Form submitted:", formData);
+
+      // make sure product id is unique
+      for (const product of products) {
+        if (product[0] === parseInt(formData.ProductID)) {
+          alert("Product ID already exists");
+          return;
+        }
+      }
 
       // Send a POST request
       const res = await axios.post(
