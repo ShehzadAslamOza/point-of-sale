@@ -11,6 +11,8 @@ const Cart = ({ handleFormStep, cart, products, setCart, customers }) => {
   const [redeemPoints, setRedeemPoints] = useState(false);
   const [membershipID, setMembershipID] = useState(customers[0][0]);
   const [forceRedeem, setForceRedeem] = useState(false);
+  const [total, setTotal] = useState(0);
+  const [payAmount, setPayAmount] = useState(0);
 
   const handleMemberShipID = (e) => {
     setMembershipID(e.target.value);
@@ -19,92 +21,97 @@ const Cart = ({ handleFormStep, cart, products, setCart, customers }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // todays date
-    const today = new Date();
-    const month = () => {
-      let m = today.getMonth();
-      if (m == 1) return "JAN";
-      if (m == 2) return "FEB";
-      if (m == 3) return "MAR";
-      if (m == 4) return "APR";
-      if (m == 5) return "MAY";
-      if (m == 6) return "JUN";
-      if (m == 7) return "JUL";
-      if (m == 8) return "AUG";
-      if (m == 9) return "SEP";
-      if (m == 10) return "OCT";
-      if (m == 11) return "NOV";
-      if (m == 12) return "DEC";
-    };
-    const date = `${today.getDate()}-${month()}-${today.getFullYear()}`;
-    const time = `${today.getHours()}:${today.getMinutes()}:${today.getSeconds()}`;
-    const submitData = {
-      receipt: {
-        EmployeeID: employeeID,
-        MembershipID: membershipID,
-        date_receipt: date,
-        time_receipt: time,
-        total_cost: 0,
-        total_sale: 0,
-        points_redeemed: 0,
-        points_received: 0,
-        sales_final: 0,
-      },
-      saleitems: [],
-      redeemTicked: redeemPoints,
-    };
 
-    filteredCart.forEach((product) => {
-      submitData.saleitems.push({
-        ProductID: product[0],
-        quantity_purchased: product[7],
-      });
-    });
-
-    // if sub total is 0 then dont send request
-    if (submitData.saleitems.length === 0) {
-      alert("Cart is empty");
+    if (payAmount < total) {
+      alert("Pay amount is less than total");
     } else {
-      const res = await axios.post(
-        "http://localhost:3002/api/receipt",
-        submitData,
-        {
-          withCredentials: true,
-        }
-      );
+      // todays date
+      const today = new Date();
+      const month = () => {
+        let m = today.getMonth();
+        if (m == 1) return "JAN";
+        if (m == 2) return "FEB";
+        if (m == 3) return "MAR";
+        if (m == 4) return "APR";
+        if (m == 5) return "MAY";
+        if (m == 6) return "JUN";
+        if (m == 7) return "JUL";
+        if (m == 8) return "AUG";
+        if (m == 9) return "SEP";
+        if (m == 10) return "OCT";
+        if (m == 11) return "NOV";
+        if (m == 12) return "DEC";
+      };
+      const date = `${today.getDate()}-${month()}-${today.getFullYear()}`;
+      const time = `${today.getHours()}:${today.getMinutes()}:${today.getSeconds()}`;
+      const submitData = {
+        receipt: {
+          EmployeeID: employeeID,
+          MembershipID: membershipID,
+          date_receipt: date,
+          time_receipt: time,
+          total_cost: 0,
+          total_sale: 0,
+          points_redeemed: 0,
+          points_received: 0,
+          sales_final: 0,
+        },
+        saleitems: [],
+        redeemTicked: redeemPoints,
+      };
 
-      if ("msg" in res.data) {
-        alert("Purchase Successful");
-
-        handleFormStep(1);
-      } else {
-        alert("MASLA HO GYA");
-      }
-    }
-
-    filteredCart.forEach((product) => {
-      // for each product check if it is in products
-      const index = products.findIndex((item) => {
-        return item[0] === product[0];
+      filteredCart.forEach((product) => {
+        submitData.saleitems.push({
+          ProductID: product[0],
+          quantity_purchased: product[7],
+        });
       });
 
-      if (products[index][6] - product[7] < 10) {
-        alert(
-          "Stock is low for Product ID: " +
-            product[0] +
-            " (" +
-            product[3] +
-            ") Contact Supply Chain to reorder"
+      // if sub total is 0 then dont send request
+      if (submitData.saleitems.length === 0) {
+        alert("Cart is empty");
+      } else {
+        const res = await axios.post(
+          "http://localhost:3002/api/receipt",
+          submitData,
+          {
+            withCredentials: true,
+          }
         );
+
+        if ("msg" in res.data) {
+          alert("Purchase Successful");
+
+          handleFormStep(1);
+        } else {
+          alert("MASLA HO GYA");
+        }
       }
-    });
+
+      filteredCart.forEach((product) => {
+        // for each product check if it is in products
+        const index = products.findIndex((item) => {
+          return item[0] === product[0];
+        });
+
+        if (products[index][6] - product[7] < 10) {
+          alert(
+            "Stock is low for Product ID: " +
+              product[0] +
+              " (" +
+              product[3] +
+              ") Contact Supply Chain to reorder"
+          );
+        }
+      });
+    }
 
     // Send a POST request
   };
 
-  const Total = () => {
+  const Total = (filtered, redeemPoints) => {
     let total = 0;
-    filteredCart.forEach((product) => {
+    filtered.forEach((product) => {
       total += parseInt(product[7]) * parseInt(product[5]);
     });
 
@@ -117,7 +124,9 @@ const Cart = ({ handleFormStep, cart, products, setCart, customers }) => {
     if (total < 0) {
       total = 0;
     }
-    return total;
+
+    setTotal(total);
+    setPayAmount(total);
   };
 
   const handleInputChange = (e) => {
@@ -182,6 +191,7 @@ const Cart = ({ handleFormStep, cart, products, setCart, customers }) => {
       }
     });
     setFilteredCart(filtered);
+    Total(filtered, redeemPoints);
   }, [cart, membershipID]);
 
   const handleRemove = (e) => {
@@ -291,7 +301,10 @@ const Cart = ({ handleFormStep, cart, products, setCart, customers }) => {
           value={redeemPoints}
           checked={redeemPoints}
           disabled={forceRedeem}
-          onChange={(e) => setRedeemPoints(e.target.checked)}
+          onChange={(e) => {
+            setRedeemPoints(e.target.checked);
+            Total(filteredCart, e.target.checked);
+          }}
         />
         <label className="text-md font-semibold ">Redeem Points </label>
         <h2 className={redeemDisabled()}>
@@ -302,9 +315,28 @@ const Cart = ({ handleFormStep, cart, products, setCart, customers }) => {
           }
         </h2>
       </div>
-      <div className="flex justify-end align-bottom items-center gap-4 m-4">
-        <h2 className="text-md font-semibold ">Total</h2>
-        <h2 className="border rounded w-1/4 py-2 px-3">{Total()}</h2>
+      <div className="flex ju">
+        <div className="flex justify-end align-bottom items-center gap-4 m-4 flex-grow">
+          <h2 className="text-md font-semibold ">Pay</h2>
+          <input
+            onChange={(e) => {
+              setPayAmount(e.target.value);
+            }}
+            value={payAmount}
+            className="border rounded w-1/2 py-2 px-3"
+            type="number"
+          />
+        </div>
+        <div className="flex justify-end align-bottom items-center gap-4 m-4 flex-grow">
+          <h2 className="text-md font-semibold ">Return</h2>
+          <h2 className="border rounded w-full py-2 px-3">
+            {payAmount - total}
+          </h2>
+        </div>
+        <div className="flex justify-end align-bottom items-center gap-4 m-4 flex-grow">
+          <h2 className="text-md font-semibold ">Total</h2>
+          <h2 className="border rounded w-full py-2 px-3">{total}</h2>
+        </div>
       </div>
       <div className="flex justify-center align-bottom items-center gap-4 m-4">
         <button
