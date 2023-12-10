@@ -57,6 +57,30 @@ const deleteReceipt = asyncHandler(async (req, res) => {
   }
 });
 
+const getLastReceiptAPI = asyncHandler(async (req, res) => {
+  let connection;
+
+  try {
+    connection = await getConnection();
+    const receiptID = await connection.execute(
+      "SELECT ReceiptID FROM Receipts ORDER BY ReceiptID DESC FETCH FIRST 1 ROWS ONLY"
+    );
+    // console.log(table.rows);
+    res.json({ id: receiptID.rows[0][0] });
+  } catch (error) {
+    console.error("Error executing SQL query:", error);
+  } finally {
+    if (connection) {
+      try {
+        // Release the connection when done
+        await connection.close();
+      } catch (error) {
+        console.error("Error closing database connection:", error);
+      }
+    }
+  }
+});
+
 const getLastReceipt = asyncHandler(async () => {
   let connection;
 
@@ -242,4 +266,5 @@ module.exports = {
   getReceipts,
   addReceipt,
   deleteReceipt,
+  getLastReceiptAPI,
 };

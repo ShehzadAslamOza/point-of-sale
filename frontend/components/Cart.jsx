@@ -3,6 +3,8 @@ import { useState } from "react";
 import axios from "axios";
 import { useContext, useEffect } from "react";
 import { AuthContext } from "@/context/AuthContext";
+import receipt from "receipt";
+import { jsPDF } from "jspdf";
 
 const Cart = ({ handleFormStep, cart, products, setCart, customers }) => {
   const { employeeID } = useContext(AuthContext);
@@ -17,6 +19,97 @@ const Cart = ({ handleFormStep, cart, products, setCart, customers }) => {
   const handleMemberShipID = (e) => {
     setMembershipID(e.target.value);
     console.log(e.target.value);
+  };
+
+  const createReceipt = async (submitData) => {
+    // get recent receipt id
+    const receiptID = await axios.get(
+      "http://localhost:3002/api/receipt/recent",
+      {
+        withCredentials: true,
+      }
+    );
+
+    // get sale items for receipt
+    const saleItems = await axios.get(
+      `http://localhost:3002/api/saleitem/?receiptID=${receiptID.data.id}`,
+      {
+        withCredentials: true,
+      }
+    );
+
+    // get product name for each sale item
+    saleItems.data.forEach((saleItem) => {
+      const index = products.findIndex((product) => {
+        return product[0] === saleItem[1];
+      });
+
+      saleItem[4] = products[index][3];
+    });
+
+    const salesLine = [];
+    saleItems.data.forEach((saleItem) => {
+      salesLine.push({
+        item: `${saleItem[4]} (${saleItem[1]})`,
+        qty: saleItem[2],
+        cost: (saleItem[3] / saleItem[2]) * 100,
+      });
+    });
+
+    const redeemDis = redeemPoints
+      ? customers.filter((customer) => {
+          return customer[0] === parseInt(membershipID);
+        })[0][6]
+      : 0;
+
+    console.log(saleItems);
+    receipt.config.currency = "Rs.";
+    receipt.config.width = 80;
+    receipt.config.ruler = "-";
+
+    const output = receipt.create([
+      {
+        type: "text",
+        value: [
+          "SHH STORE",
+          "IBA MAIN CAMPUS, KARACHI",
+          "090078601",
+          "www.ssh.com",
+        ],
+        align: "center",
+      },
+      { type: "empty" },
+      {
+        type: "properties",
+        lines: [
+          { name: "Receipt Number", value: `${receiptID.data.id}` },
+          { name: "Membership ID", value: `${membershipID}` },
+          { name: "Employee ID", value: `${employeeID}` },
+          {
+            name: "Date",
+            value: `${submitData.receipt.date_receipt} ${submitData.receipt.time_receipt}`,
+          },
+        ],
+      },
+      {
+        type: "table",
+        lines: salesLine,
+      },
+      {
+        type: "properties",
+        lines: [
+          { name: "Sub Total", value: `Rs. ${total + redeemDis}` },
+          { name: "Points Redeemed", value: ` - Rs.${redeemDis}` },
+          { name: "Total", value: `Rs.${total}` },
+        ],
+      },
+    ]);
+
+    const doc = new jsPDF();
+
+    doc.text(output, 30, 30);
+    doc.save(`ReceiptNo${receiptID.data.id}.pdf`);
+    console.log(output);
   };
 
   const handleSubmit = async (e) => {
@@ -81,7 +174,8 @@ const Cart = ({ handleFormStep, cart, products, setCart, customers }) => {
 
         if ("msg" in res.data) {
           alert("Purchase Successful");
-
+          // create receipt
+          await createReceipt(submitData);
           handleFormStep(1);
         } else {
           alert("MASLA HO GYA");
