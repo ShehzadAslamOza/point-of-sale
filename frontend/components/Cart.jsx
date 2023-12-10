@@ -113,6 +113,10 @@ const Cart = ({ handleFormStep, cart, products, setCart, customers }) => {
         return customer[0] === parseInt(membershipID);
       })[0][6];
     }
+
+    if (total < 0) {
+      total = 0;
+    }
     return total;
   };
 
