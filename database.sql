@@ -230,37 +230,37 @@ INSERT INTO Employees (employee_first_name, employee_last_name, employee_email, 
 VALUES ('Shehzad', 'Aslam', 'shehzadaslamoza@gmail.com', '03001234567', '04-MAR-2021');
 
 INSERT INTO Employees (employee_first_name, employee_last_name, employee_email, employee_phone_number, employee_joining_date) 
-VALUES ('Haider', 'Khan', 'haidercalculus@gmail.com', '03001234567', '04-MAR-2021');
+VALUES ('Haider', 'Khan', 'haidercalculus@gmail.com', '03331234567', '05-MAR-2021');
 
 INSERT INTO Employees (employee_first_name, employee_last_name, employee_email, employee_phone_number, employee_joining_date) 
-VALUES ('Hazim', 'IBA', 'hazimghulamfarooq19@gmail.com', '03001234567', '04-MAR-2021');
+VALUES ('Hazim', 'G.Farooq', 'hazimghulamfarooq19@gmail.com', '03221234567', '06-MAR-2021');
 
 INSERT INTO Employees (employee_first_name, employee_last_name, employee_email, employee_phone_number, employee_joining_date) 
-VALUES ('M', 'Shehzad', 'shehzadaslamoza6@gmail.com', '03001234567', '04-MAR-2021');
+VALUES ('M', 'Shehzad', 'shehzadaslamoza6@gmail.com', '03011234567', '07-MAR-2021');
 
 INSERT INTO Employees (employee_first_name, employee_last_name, employee_email, employee_phone_number, employee_joining_date) 
-VALUES ('M', 'TEST', 'sshpointofsale@gmail.com', '03001234567', '04-MAR-2021');
+VALUES ('M', 'TEST', 'sshpointofsale@gmail.com', '03101234567', '08-MAR-2021');
 
 -- Insert dummy data in Customer tables
 INSERT INTO Customers (first_name, last_name, email, age, phone_number, points, customer_city, customer_country, customer_street_address, customer_plot_number)
-VALUES ('C1', 'C1', 'email', 20, '03001234567', 0, 'Karachi', 'Pakistan', 'Street 1', 'Plot 1');
+VALUES ('Super', 'Man', 'superman@gmail.com', 21, '03001234565', 0, 'Karachi', 'Pakistan', 'Street 1', 'Plot 1');
 
 INSERT INTO Customers (first_name, last_name, email, age, phone_number, points, customer_city, customer_country, customer_street_address, customer_plot_number)
-VALUES ('C2', 'C2', 'email', 20, '03001234567', 0, 'Karachi', 'Pakistan', 'Street 1', 'Plot 1');
+VALUES ('Bat', 'Man', 'batman@gmail.com', 22, '03331234565', 0, 'Karachi', 'Pakistan', 'Street 2', 'Plot 3');
 
 INSERT INTO Customers (first_name, last_name, email, age, phone_number, points, customer_city, customer_country, customer_street_address, customer_plot_number)
-VALUES ('C3', 'C3', 'email', 20, '03001234567', 0, 'Karachi', 'Pakistan', 'Street 1', 'Plot 1');
+VALUES ('Captain', 'Pak', 'cappak@gmail.com', 29, '03221234565', 0, 'Karachi', 'Pakistan', 'Street 3', 'Plot 2');
 
 
 -- Insert dummy data in Suppliers tables
 INSERT INTO Suppliers (supplier_first_name, supplier_last_name, supplier_phone_number, supplier_email, supplier_city, supplier_country, supplier_street_address, supplier_plot_number)
-VALUES ('S1', 'S1', '03001234567', 'email', 'Karachi', 'Pakistan', 'Street 2', 'Plot 1');
+VALUES ('Snoop', 'Dogg', '03001234566', 'email', 'Karachi', 'Pakistan', 'Street 5', 'Plot 7');
 
 INSERT INTO Suppliers (supplier_first_name, supplier_last_name, supplier_phone_number, supplier_email, supplier_city, supplier_country, supplier_street_address, supplier_plot_number)
-VALUES ('S2', 'S2', '03001234567', 'email', 'Karachi', 'Pakistan', 'Street 3', 'Plot 1');
+VALUES ('Walter', 'White', '03331234566', 'email', 'Karachi', 'Pakistan', 'Street 4', 'Plot 9');
 
 INSERT INTO Suppliers (supplier_first_name, supplier_last_name, supplier_phone_number, supplier_email, supplier_city, supplier_country, supplier_street_address, supplier_plot_number)
-VALUES ('S3', 'S3', '03001234567', 'email', 'Karachi', 'Pakistan', 'Street 4', 'Plot 1');
+VALUES ('Ahmar', 'Ayaz', '03221234566', 'email', 'Karachi', 'Pakistan', 'Street 7', 'Plot 8');
 
 
 -- Insert dummy data in Categories tables
